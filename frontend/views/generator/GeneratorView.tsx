@@ -6,6 +6,11 @@ import {HorizontalLayout} from "@hilla/react-components/HorizontalLayout";
 import {ComboBox} from "@hilla/react-components/ComboBox";
 
 export default function GeneratorView() {
+    const [product, setProduct] = useState('');
+    const [subject, setSubject] = useState('');
+    const [how, setHow] = useState('');
+    const [result, setResult] = useState('');
+
     const [ideaList, setIdeaList] = useState('');
 
     const [products, setProducts] = useState(Array<string>());
@@ -38,26 +43,36 @@ export default function GeneratorView() {
                         className="m-m"
                         label="Product"
                         items={products}
+                        value={product}
+                        required={true}
                     />
                     <ComboBox
                         className="m-m"
                         label="Subject"
                         items={subjects}
+                        value={subject}
+                        required={true}
                     />
                     <ComboBox
                         className="m-m"
                         label="How"
                         items={hows}
+                        value={how}
+                        required={true}
                     />
                     <ComboBox
                         className="m-m"
                         label="Twist/Result"
                         items={results}
+                        value={result}
+                        required={true}
                     />
                 </HorizontalLayout>
                 <Button
+                    typeof="submit"
                     onClick={async () => {
-                        const serverResponse = await GeneratorEndpoint.generate();
+                        const serverResponse =
+                            await GeneratorEndpoint.getIdeas([product, subject, how, result]);
                         setIdeaList(serverResponse);
                     }}
                 >

@@ -26,3 +26,5 @@ out/
 node_modules/
 frontend/generated/
 vite.generated.ts
+
+src/main/resources/application-local.properties

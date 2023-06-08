@@ -1,4 +1,4 @@
-package com.example.application.openai;
+package com.example.ideagenerator.service;
 
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;

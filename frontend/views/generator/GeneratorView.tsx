@@ -9,6 +9,9 @@ import {Form, FormikErrors, useFormik} from "formik";
 import * as _ from "lodash";
 import {object, string} from 'yup';
 import {FormLayout} from "@hilla/react-components/FormLayout";
+import {ListBox} from "@hilla/react-components/ListBox";
+import {Item} from "@hilla/react-components/Item.js";
+import {MessageList} from "@hilla/react-components/MessageList";
 
 const keywordSchema = object({
     product: string().required(),
@@ -31,7 +34,7 @@ export default function GeneratorView() {
     const [results, setResults] = useState(Array<string>());
 
     const empty: Keyword = {product: '', subject: '', how: '', result: ''};
-    const [ideaList, setIdeaList] = useState('');
+    const [ideaList, setIdeaList] = useState(Array<String>);
 
     useEffect(() => {
         (async () => {
@@ -112,7 +115,7 @@ export default function GeneratorView() {
         <>
             <VerticalLayout className="p-m gap-m">
                 <form>
-                    <HorizontalLayout style={{alignItems:"baseline"}}>
+                    <HorizontalLayout style={{alignItems: "baseline"}}>
                         <ComboBox
                             className="m-m"
                             label="Product"
@@ -183,10 +186,18 @@ export default function GeneratorView() {
                         </Button>
                     </HorizontalLayout>
                 </form>
-                {ideaList && (
+                {ideaList && !!ideaList.length && (
                     <div className=" w-full">
                         <h3 className="mb-m">Here are some ideas:</h3>
-                        <p className="p-m m-auto border border-success-10">{ideaList}</p>
+                        <MessageList className="p-m m-auto border border-success-10">
+                            {ideaList.map((idea, index) =>
+                                (
+                                    <Item  key={index}>
+                                        {idea}
+                                    </Item>
+                                ))
+                            }
+                        </MessageList>
                     </div>
                 )}
             </VerticalLayout>

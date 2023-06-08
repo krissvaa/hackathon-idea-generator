@@ -4,19 +4,23 @@ import {GeneratorEndpoint, KeywordEndpoint} from "Frontend/generated/endpoints.j
 import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import {HorizontalLayout} from "@hilla/react-components/HorizontalLayout";
 import {ComboBox} from "@hilla/react-components/ComboBox";
+import {EndpointValidationError} from "@hilla/frontend";
+import {FormikErrors, useFormik} from "formik";
 
+type Keyword = {
+    product: string,
+    subject: string,
+    how: string,
+    result: string,
+}
 export default function GeneratorView() {
-    const [product, setProduct] = useState('');
-    const [subject, setSubject] = useState('');
-    const [how, setHow] = useState('');
-    const [result, setResult] = useState('');
-
-    const [ideaList, setIdeaList] = useState('');
-
     const [products, setProducts] = useState(Array<string>());
     const [subjects, setSubjects] = useState(Array<string>());
     const [hows, setHows] = useState(Array<string>());
     const [results, setResults] = useState(Array<string>());
+
+    const empty: Keyword = {product: '', subject: '', how: '', result: ''};
+    const [ideaList, setIdeaList] = useState('');
 
     useEffect(() => {
         (async () => {
@@ -34,6 +38,35 @@ export default function GeneratorView() {
         })();
     }, []);
 
+    const formik = useFormik({
+                initialValues: empty,
+                onSubmit: async (value: Keyword, {setSubmitting, setErrors}) => {
+                    try {
+                        if (value.product && value.result && value.how && value.subject) {
+                            const serverResponse =
+                                await GeneratorEndpoint.getIdeas([value.product, value.subject, value.how, value.result]);
+                            setIdeaList(serverResponse);
+                            // formik.resetForm();
+                        }
+                    } catch (e: unknown) {
+                        if (e instanceof EndpointValidationError) {
+                            const errors: FormikErrors<Keyword> = {};
+                            for (const error of e.validationErrorData) {
+                                if (typeof error.parameterName === 'string' && !(error.parameterName in empty)) {
+                                    const key = error.parameterName as string & keyof Keyword;
+                                    errors[key] = error.message.substring(error.message.indexOf("validation error:"));
+                                }
+                            }
+                            setErrors(errors);
+                        }
+                    } finally {
+                        setSubmitting(false);
+                    }
+                },
+            }
+        )
+    ;
+
 
     return (
         <>
@@ -42,42 +75,65 @@ export default function GeneratorView() {
                     <ComboBox
                         className="m-m"
                         label="Product"
+                        name="product"
                         items={products}
-                        value={product}
+                        value={formik.values.product}
+                        onChange={formik.handleChange}
+                        errorMessage={formik.errors.product}
                         required={true}
                     />
                     <ComboBox
                         className="m-m"
                         label="Subject"
+                        name="subject"
                         items={subjects}
-                        value={subject}
+                        value={formik.values.subject}
+                        onChange={formik.handleChange}
+                        errorMessage={formik.errors.subject}
                         required={true}
                     />
                     <ComboBox
                         className="m-m"
                         label="How"
+                        name="how"
                         items={hows}
-                        value={how}
+                        value={formik.values.how}
+                        onChange={formik.handleChange}
+                        errorMessage={formik.errors.how}
                         required={true}
                     />
                     <ComboBox
                         className="m-m"
                         label="Twist/Result"
+                        name="result"
                         items={results}
-                        value={result}
+                        value={formik.values.result}
+                        onChange={formik.handleChange}
+                        errorMessage={formik.errors.result}
                         required={true}
                     />
                 </HorizontalLayout>
-                <Button
-                    typeof="submit"
-                    onClick={async () => {
-                        const serverResponse =
-                            await GeneratorEndpoint.getIdeas([product, subject, how, result]);
-                        setIdeaList(serverResponse);
-                    }}
-                >
-                    Generate Hackathon idea
-                </Button>
+                <HorizontalLayout className="m-auto">
+                    <Button
+                        theme="primary"
+                        typeof="submit"
+                        className="m-m"
+                        disabled={formik.isSubmitting}
+                        onClick={formik.submitForm}
+                    >
+                        Generate Hackathon idea
+                    </Button>
+                    <Button
+                        theme="secondary"
+                        className="p-l"
+                        onClick={() => {
+
+                        }}
+                    >
+                        Randomize <br/>
+                        keywords
+                    </Button>
+                </HorizontalLayout>
                 {ideaList && (
                     <div className=" w-full">
                         <h3 className="mb-m">New Idea:</h3>

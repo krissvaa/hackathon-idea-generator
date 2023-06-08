@@ -5,11 +5,9 @@ import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import {HorizontalLayout} from "@hilla/react-components/HorizontalLayout";
 import {ComboBox} from "@hilla/react-components/ComboBox";
 import {EndpointValidationError} from "@hilla/frontend";
-import {Form, FormikErrors, useFormik} from "formik";
+import {FormikErrors, useFormik} from "formik";
 import * as _ from "lodash";
 import {object, string} from 'yup';
-import {FormLayout} from "@hilla/react-components/FormLayout";
-import {ListBox} from "@hilla/react-components/ListBox";
 import {Item} from "@hilla/react-components/Item.js";
 import {MessageList} from "@hilla/react-components/MessageList";
 

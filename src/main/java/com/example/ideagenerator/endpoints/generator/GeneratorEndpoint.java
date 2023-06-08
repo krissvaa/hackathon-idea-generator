@@ -18,8 +18,8 @@ public class GeneratorEndpoint {
     }
 
     @Nonnull
-    public List<@Nonnull String> getIdeas(@Nonnull List<@Nonnull String> tokens) {
-        System.out.println("Tokens: " + tokens.toString());
-        return OpenAI.getHackathonIdeas(tokens.toString());
+    public List<@Nonnull String> getIdeas(@Nonnull List<@Nonnull String> keywords) {
+        System.out.println("Selected keywords: " + keywords.toString());
+        return OpenAI.getHackathonIdeas(keywords.toString());
     }
 }

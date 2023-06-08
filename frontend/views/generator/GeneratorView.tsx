@@ -5,8 +5,17 @@ import {VerticalLayout} from "@hilla/react-components/VerticalLayout";
 import {HorizontalLayout} from "@hilla/react-components/HorizontalLayout";
 import {ComboBox} from "@hilla/react-components/ComboBox";
 import {EndpointValidationError} from "@hilla/frontend";
-import {FormikErrors, useFormik} from "formik";
+import {Form, FormikErrors, useFormik} from "formik";
 import * as _ from "lodash";
+import {object, string} from 'yup';
+import {FormLayout} from "@hilla/react-components/FormLayout";
+
+const keywordSchema = object({
+    product: string().required(),
+    subject: string().required(),
+    how: string().required(),
+    result: string().required(),
+});
 
 
 type Keyword = {
@@ -42,14 +51,12 @@ export default function GeneratorView() {
 
     const formik = useFormik({
             initialValues: empty,
+            validationSchema: keywordSchema,
             onSubmit: async (value: Keyword, {setSubmitting, setErrors}) => {
                 try {
-                    if (value.product && value.result && value.how && value.subject) {
-                        const serverResponse =
-                            await GeneratorEndpoint.getIdeas([value.product, value.subject, value.how, value.result]);
-                        setIdeaList(serverResponse);
-                        // formik.resetForm();
-                    }
+                    const serverResponse =
+                        await GeneratorEndpoint.getIdeas([value.product, value.subject, value.how, value.result]);
+                    setIdeaList(serverResponse);
                 } catch (e: unknown) {
                     if (e instanceof EndpointValidationError) {
                         const errors: FormikErrors<Keyword> = {};
@@ -76,80 +83,109 @@ export default function GeneratorView() {
             result: _.sample(results) || ''
         }
 
-        formik.setFieldValue('product', randomKeyword.product);
-        formik.setFieldValue('subject', randomKeyword.subject);
-        formik.setFieldValue('how', randomKeyword.how);
-        formik.setFieldValue('result', randomKeyword.result);
+        formik.values.product = randomKeyword.product;
+        formik.values.subject = randomKeyword.subject;
+        formik.values.how = randomKeyword.how;
+        formik.values.result = randomKeyword.result;
+        // formik.setFieldValue('subject', randomKeyword.subject);
+        // formik.setFieldValue('how', randomKeyword.how);
+        // formik.setFieldValue('result', randomKeyword.result);
+        formik.validateForm(randomKeyword)  //For the validation errors to clear
+    }
+
+    const clearValues = () => {
+
+        formik.values.product = empty.product;
+        formik.values.subject = empty.subject;
+        formik.values.how = empty.how;
+        formik.values.result = empty.result;
+        // formik.setFieldValue('product', empty.product);
+        // formik.setFieldValue('subject', empty.subject);
+        // formik.setFieldValue('how', empty.how);
+        // formik.setFieldValue('result', empty.result);
+
+        formik.validateForm(empty)  //For the validation errors to clear
     }
 
 
     return (
         <>
             <VerticalLayout className="p-m gap-m">
-                <HorizontalLayout className="">
-                    <ComboBox
-                        className="m-m"
-                        label="Product"
-                        name="product"
-                        items={products}
-                        value={formik.values.product}
-                        onChange={formik.handleChange}
-                        errorMessage={formik.errors.product}
-                        required={true}
-                    />
-                    <ComboBox
-                        className="m-m"
-                        label="Subject"
-                        name="subject"
-                        items={subjects}
-                        value={formik.values.subject}
-                        onChange={formik.handleChange}
-                        errorMessage={formik.errors.subject}
-                        required={true}
-                    />
-                    <ComboBox
-                        className="m-m"
-                        label="How"
-                        name="how"
-                        items={hows}
-                        value={formik.values.how}
-                        onChange={formik.handleChange}
-                        errorMessage={formik.errors.how}
-                        required={true}
-                    />
-                    <ComboBox
-                        className="m-m"
-                        label="Twist/Result"
-                        name="result"
-                        items={results}
-                        value={formik.values.result}
-                        onChange={formik.handleChange}
-                        errorMessage={formik.errors.result}
-                        required={true}
-                    />
-                </HorizontalLayout>
-                <HorizontalLayout className="m-auto">
-                    <Button
-                        theme="primary"
-                        typeof="submit"
-                        className="m-m"
-                        disabled={formik.isSubmitting}
-                        onClick={formik.submitForm}
-                    >
-                        Generate Hackathon idea
-                    </Button>
-                    <Button
-                        theme="secondary"
-                        className="p-l"
-                        onClick={randomizeValues}
-                    >
-                        Randomize <br/>
-                        keywords
-                    </Button>
-                </HorizontalLayout>
+                <form>
+                    <HorizontalLayout style={{alignItems:"baseline"}}>
+                        <ComboBox
+                            className="m-m"
+                            label="Product"
+                            name="product"
+                            items={products}
+                            value={formik.values.product}
+                            onChange={formik.handleChange}
+                            errorMessage={formik.errors.product}
+                            invalid={!!formik.errors.product}
+                            required={true}
+                        />
+                        <ComboBox
+                            className="m-m"
+                            label="Subject"
+                            name="subject"
+                            items={subjects}
+                            value={formik.values.subject}
+                            onChange={formik.handleChange}
+                            errorMessage={formik.errors.subject}
+                            invalid={!!formik.errors.subject}
+                            required
+                        />
+                        <ComboBox
+                            className="m-m"
+                            label="How"
+                            name="how"
+                            items={hows}
+                            value={formik.values.how}
+                            onChange={formik.handleChange}
+                            errorMessage={formik.errors.how}
+                            invalid={!!formik.errors.how}
+                            required={true}
+                        />
+                        <ComboBox
+                            className="m-m"
+                            label="Twist/Result"
+                            name="result"
+                            items={results}
+                            value={formik.values.result}
+                            onChange={formik.handleChange}
+                            errorMessage={formik.errors.result}
+                            invalid={!!formik.errors.result}
+                            required={true}
+                        />
+
+                        <Button
+                            theme="secondary"
+                            onClick={clearValues}
+                        >Clear
+                        </Button>
+                    </HorizontalLayout>
+                    <HorizontalLayout className="m-auto">
+                        <Button
+                            theme="primary"
+                            className="m-m"
+                            disabled={formik.isSubmitting}
+                            onClick={formik.submitForm}
+                        >
+                            Generate Hackathon Idea
+                        </Button>
+                        <Button
+                            theme="secondary"
+                            className="p-l"
+                            onClick={randomizeValues}
+                        >
+                            Randomize <br/>
+                            Keywords
+                        </Button>
+                    </HorizontalLayout>
+                </form>
                 {ideaList && (
                     <div className=" w-full">
-                        <h3 className="mb-m">New Idea:</h3>
+                        <h3 className="mb-m">Here are some ideas:</h3>
                         <p className="p-m m-auto border border-success-10">{ideaList}</p>
                     </div>
                 )}

@@ -32,7 +32,8 @@
     "lit": "2.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.2"
+    "react-router-dom": "^6.4.2",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@lit-labs/react": "^1.1.0",
@@ -85,7 +86,8 @@
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
-    "formik": "$formik"
+    "formik": "$formik",
+    "yup": "$yup"
   },
   "vaadin": {
     "dependencies": {
@@ -130,6 +132,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "63dd4e704c9fb027e7c4a703b4dba04887bf4c52143fe4054406b19d04b052b4"
+    "hash": "fc9cb21f42bc2c473cda1a0de966e3cc79b6df81aa6c86f65e3c1a5ceed6b545"
   }
 }

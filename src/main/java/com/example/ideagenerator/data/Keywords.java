@@ -24,7 +24,7 @@ public class Keywords {
             "Virtual assistant","Robotic process automation","Chatbot","Augmented reality",
             "Media monitoring","Weekly calls","Simpsons","Birthday reminder","Web component",
             "Cryptocurrency","Personal coin","Solar power","Stock trading bot","Gmail",
-            "deadlines","jokes","meeting scheduling","writing","software development",
+            "deadlines","Jokes","meeting scheduling","writing","software development",
             "web development","UI design","web development","content creation","subject",
             "community","social platform","fashion","communication","SMS","process optimization",
             "personal tasks","repetitive tasks","texting","AR","news tracking","meetings","TV show",

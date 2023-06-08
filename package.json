@@ -28,6 +28,7 @@
     "@vaadin/vaadin-themable-mixin": "24.0.3",
     "classnames": "^2.3.2",
     "construct-style-sheets-polyfill": "3.1.0",
+    "formik": "^2.4.1",
     "lit": "2.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -37,6 +38,7 @@
     "@lit-labs/react": "^1.1.0",
     "@rollup/plugin-replace": "5.0.2",
     "@rollup/pluginutils": "5.0.2",
+    "@types/lodash": "^4.14.195",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "~3.0.1",
@@ -82,7 +84,8 @@
     "@vaadin/polymer-legacy-adapter": "$@vaadin/polymer-legacy-adapter",
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
     "@vaadin/vaadin-lumo-styles": "$@vaadin/vaadin-lumo-styles",
-    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles"
+    "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
+    "formik": "$formik"
   },
   "vaadin": {
     "dependencies": {
@@ -127,6 +130,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "594d22ba691fbd651bb9ed77858d9e2c70ec6667d9cd8a283339cd5b691b1ce9"
+    "hash": "63dd4e704c9fb027e7c4a703b4dba04887bf4c52143fe4054406b19d04b052b4"
   }
 }

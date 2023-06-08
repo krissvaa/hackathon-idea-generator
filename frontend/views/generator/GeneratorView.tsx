@@ -6,6 +6,8 @@ import {HorizontalLayout} from "@hilla/react-components/HorizontalLayout";
 import {ComboBox} from "@hilla/react-components/ComboBox";
 import {EndpointValidationError} from "@hilla/frontend";
 import {FormikErrors, useFormik} from "formik";
+import * as _ from "lodash";
+
 
 type Keyword = {
     product: string,
@@ -39,33 +41,46 @@ export default function GeneratorView() {
     }, []);
 
     const formik = useFormik({
-                initialValues: empty,
-                onSubmit: async (value: Keyword, {setSubmitting, setErrors}) => {
-                    try {
-                        if (value.product && value.result && value.how && value.subject) {
-                            const serverResponse =
-                                await GeneratorEndpoint.getIdeas([value.product, value.subject, value.how, value.result]);
-                            setIdeaList(serverResponse);
-                            // formik.resetForm();
-                        }
-                    } catch (e: unknown) {
-                        if (e instanceof EndpointValidationError) {
-                            const errors: FormikErrors<Keyword> = {};
-                            for (const error of e.validationErrorData) {
-                                if (typeof error.parameterName === 'string' && !(error.parameterName in empty)) {
-                                    const key = error.parameterName as string & keyof Keyword;
-                                    errors[key] = error.message.substring(error.message.indexOf("validation error:"));
-                                }
-                            }
-                            setErrors(errors);
-                        }
-                    } finally {
-                        setSubmitting(false);
+            initialValues: empty,
+            onSubmit: async (value: Keyword, {setSubmitting, setErrors}) => {
+                try {
+                    if (value.product && value.result && value.how && value.subject) {
+                        const serverResponse =
+                            await GeneratorEndpoint.getIdeas([value.product, value.subject, value.how, value.result]);
+                        setIdeaList(serverResponse);
+                        // formik.resetForm();
                     }
-                },
-            }
-        )
-    ;
+                } catch (e: unknown) {
+                    if (e instanceof EndpointValidationError) {
+                        const errors: FormikErrors<Keyword> = {};
+                        for (const error of e.validationErrorData) {
+                            if (typeof error.parameterName === 'string' && !(error.parameterName in empty)) {
+                                const key = error.parameterName as string & keyof Keyword;
+                                errors[key] = error.message.substring(error.message.indexOf("validation error:"));
+                            }
+                        }
+                        setErrors(errors);
+                    }
+                } finally {
+                    setSubmitting(false);
+                }
+            },
+        }
+    )
+
+    const randomizeValues = () => {
+        const randomKeyword: Keyword = {
+            product: _.sample(products) || '',
+            subject: _.sample(subjects) || '',
+            how: _.sample(hows) || '',
+            result: _.sample(results) || ''
+        }
+
+        formik.setFieldValue('product', randomKeyword.product);
+        formik.setFieldValue('subject', randomKeyword.subject);
+        formik.setFieldValue('how', randomKeyword.how);
+        formik.setFieldValue('result', randomKeyword.result);
+    }
 
 
     return (
@@ -126,9 +141,7 @@ export default function GeneratorView() {
                     <Button
                         theme="secondary"
                         className="p-l"
-                        onClick={() => {
-
-                        }}
+                        onClick={randomizeValues}
                     >
                         Randomize <br/>
                         keywords

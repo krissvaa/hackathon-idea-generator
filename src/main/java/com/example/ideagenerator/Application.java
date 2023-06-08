@@ -1,4 +1,4 @@
-package com.example.application;
+package com.example.ideagenerator;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;

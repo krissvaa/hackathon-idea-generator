@@ -1,4 +1,4 @@
-package com.example.application.endpoints.generator;
+package com.example.ideagenerator.endpoints.generator;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;

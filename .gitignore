@@ -1,0 +1,28 @@
+target/
+
+# Eclipse and STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# VS Code
+.vscode/
+
+
+# The following files are generated/updated by Hilla
+node_modules/
+frontend/generated/
+vite.generated.ts

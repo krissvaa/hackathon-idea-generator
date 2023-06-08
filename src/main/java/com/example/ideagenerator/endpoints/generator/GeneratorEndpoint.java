@@ -1,5 +1,6 @@
 package com.example.ideagenerator.endpoints.generator;
 
+import com.example.ideagenerator.service.OpenAI;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
@@ -18,6 +19,7 @@ public class GeneratorEndpoint {
 
     @Nonnull
     public String getIdeas(@Nonnull List<@Nonnull String> tokens) {
-            return "Hello ";
+            System.out.println("Tokens: " + tokens.toString());
+            return OpenAI.getHackathonIdeas(tokens.toString());
     }
 }

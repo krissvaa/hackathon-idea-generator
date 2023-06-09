@@ -11,23 +11,24 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 @Service
 public class OpenAI {
-
 
     @Value("${apikey}")
     private String apiKey;
 
-
-    public List<String> getHackathonIdeas(String keywords) {
+    public List<String> getHackathonIdeas(String keywords, boolean isFunny) {
         try {
 
             // OpenAI API key
             // Uses your own API key as OpenAI revokes mine if it sees on GitHub:
             String apiKey = this.apiKey;
 
+            var funny = isFunny ? " weird and funny " : "";
+
             // Set the prompt
-            String prompt = "Provide 3 different ideas for a hackathon projects that use these keywords:: \n\n";
+            String prompt = "Provide 3 different " + funny + " ideas for a hackathon projects that must use these keywords:: \n\n";
 
             List<ChatMessage> messages = new ArrayList<>();
             ChatMessage chatMessage = new ChatMessage();

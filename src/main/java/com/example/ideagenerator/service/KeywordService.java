@@ -22,4 +22,15 @@ public class KeywordService {
     public List<String> getResultKeywords() {
         return Keywords.RESULTS;
     }
+
+    public void validateKeywords(List<String> tokens) {
+        if (tokens.stream().anyMatch(token ->
+                !Keywords.PRODUCTS.contains(token)
+                        && !Keywords.SUBJECTS.contains(token)
+                        && !Keywords.HOWS.contains(token)
+                        && !Keywords.RESULTS.contains(token)
+        )) {
+            throw new IllegalStateException("Only predefined tokens are allowed!");
+        }
+    }
 }

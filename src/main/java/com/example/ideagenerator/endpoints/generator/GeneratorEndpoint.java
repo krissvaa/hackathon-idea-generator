@@ -1,5 +1,6 @@
 package com.example.ideagenerator.endpoints.generator;
 
+import com.example.ideagenerator.service.KeywordService;
 import com.example.ideagenerator.service.OpenAI;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
@@ -14,14 +15,18 @@ public class GeneratorEndpoint {
 
 
     private OpenAI openAI;
+    private final KeywordService keywordService;
+
     @Autowired
-    public GeneratorEndpoint(OpenAI openAI) {
+    public GeneratorEndpoint(OpenAI openAI, KeywordService keywordService) {
         this.openAI = openAI;
+        this.keywordService = keywordService;
     }
 
     @Nonnull
-    public List<@Nonnull String> getIdeas(@Nonnull List<@Nonnull String> keywords) {
-        System.out.println("Selected keywords: " + keywords.toString());
-        return openAI.getHackathonIdeas(keywords.toString());
+    public List<@Nonnull String> getIdeas(@Nonnull List<@Nonnull String> tokens, boolean extraFunny) {
+        System.out.println("Tokens: " + tokens.toString() + ", is extra Funny: " + extraFunny);
+        keywordService.validateKeywords(tokens);
+        return openAI.getHackathonIdeas(tokens.toString(), extraFunny);
     }
 }

@@ -10,6 +10,7 @@ import * as _ from "lodash";
 import {object, string} from 'yup';
 import {Item} from "@hilla/react-components/Item.js";
 import {MessageList} from "@hilla/react-components/MessageList";
+import {Checkbox} from "@hilla/react-components/Checkbox";
 
 const keywordSchema = object({
     product: string().required(),
@@ -24,6 +25,7 @@ type Keyword = {
     subject: string,
     how: string,
     result: string,
+    extraFunny: boolean
 }
 export default function GeneratorView() {
     const [products, setProducts] = useState(Array<string>());
@@ -31,7 +33,7 @@ export default function GeneratorView() {
     const [hows, setHows] = useState(Array<string>());
     const [results, setResults] = useState(Array<string>());
 
-    const empty: Keyword = {product: '', subject: '', how: '', result: ''};
+    const empty: Keyword = {product: '', subject: '', how: '', result: '', extraFunny: false};
     const [ideaList, setIdeaList] = useState(Array<String>);
 
     useEffect(() => {
@@ -55,8 +57,8 @@ export default function GeneratorView() {
             validationSchema: keywordSchema,
             onSubmit: async (value: Keyword, {setSubmitting, setErrors}) => {
                 try {
-                    const serverResponse =
-                        await GeneratorEndpoint.getIdeas([value.product, value.subject, value.how, value.result]);
+                    const tokens = [value.product, value.subject, value.how, value.result];
+                    const serverResponse = await GeneratorEndpoint.getIdeas(tokens, value.extraFunny);
                     setIdeaList(serverResponse);
                 } catch (e: unknown) {
                     if (e instanceof EndpointValidationError) {
@@ -81,16 +83,14 @@ export default function GeneratorView() {
             product: _.sample(products) || '',
             subject: _.sample(subjects) || '',
             how: _.sample(hows) || '',
-            result: _.sample(results) || ''
+            result: _.sample(results) || '',
+            extraFunny: formik.values.extraFunny
         }
 
         formik.values.product = randomKeyword.product;
         formik.values.subject = randomKeyword.subject;
         formik.values.how = randomKeyword.how;
         formik.values.result = randomKeyword.result;
-        // formik.setFieldValue('subject', randomKeyword.subject);
-        // formik.setFieldValue('how', randomKeyword.how);
-        // formik.setFieldValue('result', randomKeyword.result);
         formik.validateForm(randomKeyword)  //For the validation errors to clear
     }
 
@@ -100,10 +100,7 @@ export default function GeneratorView() {
         formik.values.subject = empty.subject;
         formik.values.how = empty.how;
         formik.values.result = empty.result;
-        // formik.setFieldValue('product', empty.product);
-        // formik.setFieldValue('subject', empty.subject);
-        // formik.setFieldValue('how', empty.how);
-        // formik.setFieldValue('result', empty.result);
+        formik.values.extraFunny = empty.extraFunny;
 
         formik.validateForm(empty)  //For the validation errors to clear
     }
@@ -119,6 +116,7 @@ export default function GeneratorView() {
                             label="Product"
                             name="product"
                             items={products}
+                            allowCustomValue={false}
                             value={formik.values.product}
                             onChange={formik.handleChange}
                             errorMessage={formik.errors.product}
@@ -130,6 +128,7 @@ export default function GeneratorView() {
                             label="Subject"
                             name="subject"
                             items={subjects}
+                            allowCustomValue={false}
                             value={formik.values.subject}
                             onChange={formik.handleChange}
                             errorMessage={formik.errors.subject}
@@ -141,6 +140,7 @@ export default function GeneratorView() {
                             label="How"
                             name="how"
                             items={hows}
+                            allowCustomValue={false}
                             value={formik.values.how}
                             onChange={formik.handleChange}
                             errorMessage={formik.errors.how}
@@ -152,19 +152,28 @@ export default function GeneratorView() {
                             label="Twist/Result"
                             name="result"
                             items={results}
+                            allowCustomValue={false}
                             value={formik.values.result}
                             onChange={formik.handleChange}
                             errorMessage={formik.errors.result}
                             invalid={!!formik.errors.result}
                             required={true}
                         />
-
                         <Button
                             theme="secondary"
                             onClick={clearValues}
                         >Clear
                         </Button>
                     </HorizontalLayout>
+                    <Checkbox
+                        className="m-m"
+                        label="Funny"
+                        name="extraFunny"
+                        value="true"
+                        checked={formik.values.extraFunny}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleChange}
+                    />
                     <HorizontalLayout className="m-auto">
                         <Button
                             theme="primary"
@@ -190,7 +199,7 @@ export default function GeneratorView() {
                         <MessageList className="p-m m-auto border border-success-10">
                             {ideaList.map((idea, index) =>
                                 (
-                                    <Item  key={index}>
+                                    <Item key={index}>
                                         {idea}
                                     </Item>
                                 ))

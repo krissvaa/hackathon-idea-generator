@@ -4,24 +4,27 @@ import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Service
 public class OpenAI {
 
-    public static void main(String[] args) {
-        System.out.println(getHackathonIdeas("[{modern, java, mobile, time-machine}]"));
-    }
 
-    public static List<String> getHackathonIdeas(String keywords) {
+    @Value("${apikey}")
+    private String apiKey;
+
+
+    public List<String> getHackathonIdeas(String keywords) {
         try {
 
             // OpenAI API key
             // Uses your own API key as OpenAI revokes mine if it sees on GitHub:
-            String apiKey = "here goes the key";
+            String apiKey = this.apiKey;
 
             // Set the prompt
             String prompt = "Provide 3 different ideas for a hackathon projects that use these keywords:: \n\n";

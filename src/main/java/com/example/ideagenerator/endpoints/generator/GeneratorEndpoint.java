@@ -12,14 +12,16 @@ import java.util.List;
 @AnonymousAllowed
 public class GeneratorEndpoint {
 
-    @Autowired
-    public GeneratorEndpoint() {
 
+    private OpenAI openAI;
+    @Autowired
+    public GeneratorEndpoint(OpenAI openAI) {
+        this.openAI = openAI;
     }
 
     @Nonnull
     public List<@Nonnull String> getIdeas(@Nonnull List<@Nonnull String> keywords) {
         System.out.println("Selected keywords: " + keywords.toString());
-        return OpenAI.getHackathonIdeas(keywords.toString());
+        return openAI.getHackathonIdeas(keywords.toString());
     }
 }
